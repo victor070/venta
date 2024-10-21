@@ -2,90 +2,81 @@ const db = require('../database');
 
 const usuariosCtrl = {};
 
-usuariosCtrl.getUsuarios = (req, res) => {
-    const sql = 'select * from usuarios';
-    db.query(sql, (err, results) => {
-        if (err) {
-            res.status(500).send('Error retrieving users');
-        } else {
-            res.json(results);
-        }
-    })
-};
-
-usuariosCtrl.postUsuarios = (req, res) => {
-    const { usuario, clave } = req.body; // Recibimos los datos del cliente
-
-    // Validar que los campos requeridos no estén vacíos
-    if (!usuario || !clave ) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+// Método para obtener todos los usuarios
+usuariosCtrl.getUsuarios = async (req, res) => {
+    try {
+      const sql = 'SELECT * FROM usuarios';
+      const results = await db.queryAsync(sql);
+      res.json(results);
+    } catch (err) {
+      res.status(500).send('Error retrieving users');
     }
+  };
 
-    // Consulta SQL para insertar un nuevo usuario
-    const sql = 'INSERT INTO usuarios (usuario, clave) VALUES (?, ?)';
-
-    // Ejecutar la consulta SQL
-    db.query(sql, [usuario, clave], (err, results) => {
-        if (err) {
-            return res.status(500).send('Error adding user');
-        } else {
-            res.status(201).json({ message: 'Usuario creado exitosamente', id: results.insertId });
-        }
-    });
-};
-
-// Método para obtener un usuario por su id
-usuariosCtrl.getUsuariosById = (req, res) => {
-    const { id } = req.params; // Extraer el idUsuario desde los parámetros de la URL
+// Método para insertar un nuevo usuario
+usuariosCtrl.postUsuarios = async (req, res) => {
+    const { usuario, clave } = req.body;
   
-    // Validar que el id sea un número
+    if (!usuario || !clave) {
+      return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+  
+    try {
+      const sql = 'INSERT INTO usuarios (usuario, clave) VALUES (?, ?)';
+      const results = await db.queryAsync(sql, [usuario, clave]);
+      res.status(201).json({ message: 'Usuario creado exitosamente', id: results.insertId });
+    } catch (err) {
+      res.status(500).send('Error adding user');
+    }
+  };
+  
+  // Método para obtener un usuario por su id
+  usuariosCtrl.getUsuariosById = async (req, res) => {
+    const { id } = req.params;
+  
     if (isNaN(id)) {
       return res.status(400).json({ message: 'El ID debe ser un número válido' });
     }
   
-    // Consulta SQL para obtener el usuario por idUsuario
-    const sql = 'SELECT * FROM usuarios WHERE idUsuario = ?';
-    
-    // Ejecutar la consulta SQL
-    db.query(sql, [id], (err, results) => {
-      if (err) {
-        return res.status(500).send('Error retrieving user');
-      }
+    try {
+      const sql = 'SELECT * FROM usuarios WHERE idUsuario = ?';
+      const results = await db.queryAsync(sql, [id]);
+  
       if (results.length === 0) {
         return res.status(404).json({ message: 'Usuario no encontrado' });
       }
-      res.json(results[0]); // Devolver el primer (y único) resultado como JSON
-    });
+      
+      res.json(results[0]);
+    } catch (err) {
+      res.status(500).send('Error retrieving user');
+    }
   };
   
-// Método para actualizar un usuario por su idUsuario
-usuariosCtrl.putUsuariosById = (req, res) => {
-    const { id } = req.params; // Extraer el idUsuario desde los parámetros de la URL
-    const { usuario, clave, vigente } = req.body; // Recibimos los datos del cliente
-    
-    // Validar que el id sea un número
+  // Método para actualizar un usuario por su idUsuario
+  usuariosCtrl.putUsuariosById = async (req, res) => {
+    const { id } = req.params;
+    const { usuario, clave, vigente } = req.body;
+  
     if (isNaN(id)) {
       return res.status(400).json({ message: 'El ID debe ser un número válido' });
     }
   
-    // Validar que al menos uno de los campos haya sido proporcionado
     if (!usuario && !clave && vigente === undefined) {
       return res.status(400).json({ message: 'Debes proporcionar al menos un campo para actualizar' });
     }
   
-    // Consulta SQL para actualizar los datos del usuario
-    const sql = 'UPDATE usuarios SET usuario = ?, clave = ?, vigente = ? WHERE idUsuario = ?';
+    try {
+      const sql = 'UPDATE usuarios SET usuario = ?, clave = ?, vigente = ? WHERE idUsuario = ?';
+      const results = await db.queryAsync(sql, [usuario, clave, vigente, id]);
   
-    // Ejecutar la consulta SQL
-    db.query(sql, [usuario, clave, vigente, id], (err, results) => {
-      if (err) {
-        return res.status(500).send('Error updating user');
-      }
       if (results.affectedRows === 0) {
         return res.status(404).json({ message: 'Usuario no encontrado' });
       }
+  
       res.json({ message: 'Usuario actualizado exitosamente' });
-    });
+    } catch (err) {
+      res.status(500).send('Error updating user');
+    }
   };
 
 
