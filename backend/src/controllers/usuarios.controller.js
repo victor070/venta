@@ -43,7 +43,7 @@ usuariosCtrl.getUsuariosById = (req, res) => {
     return res.status(400).json({ message: 'El ID debe ser un número válido' });
   }
 
-  // Consulta SQL para obtener el usuario por idUsuario
+  // Consulta SQL para  obtenerel usuario por idUsuario
   const sql = 'SELECT * FROM usuarios WHERE idUsuario = ?';
   
   // Ejecutar la consulta SQL
