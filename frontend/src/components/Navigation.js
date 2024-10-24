@@ -5,6 +5,7 @@ import Configuracion from './Configuracion';
 export default class Navigation extends Component {
   render() {
     return (
+
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">Ventas</Link>
@@ -30,6 +31,7 @@ export default class Navigation extends Component {
               <Configuracion />
 
             </ul>
+            
           </div>
         </div>
       </nav>

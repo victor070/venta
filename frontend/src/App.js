@@ -12,8 +12,8 @@ import Configuracion from './components/Configuracion'
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Navigation />
+      <Navigation />
+      <div className="container-fluid p-4">
         <Routes> {/* Envuelve las rutas dentro de <Routes> */}
           <Route path='/usuarios' element={<ListUsuarios />} />
           <Route path='/crearusuarios' element={<CreateUsuario />} />

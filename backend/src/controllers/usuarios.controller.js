@@ -3,7 +3,7 @@ const db = require('../database');
 const usuariosCtrl = {};
 
 usuariosCtrl.getUsuarios = (req, res) => {
-  const sql = 'select * from usuarios';
+  const sql = 'select * from usuarios where vigente = 1';
   db.query(sql, (err, results) => {
       if (err) {
           res.status(500).send('Error retrieving users');
