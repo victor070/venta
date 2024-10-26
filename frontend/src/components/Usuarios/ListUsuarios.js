@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from 'axios'; //generar llamadas a la api
 import Swal from 'sweetalert2'; // Importar SweetAlert2
 import $ from 'jquery';
 import 'datatables.net-bs5'; // DataTables con Bootstrap 5

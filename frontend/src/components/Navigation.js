@@ -24,7 +24,7 @@ export default class Navigation extends Component {
             <ul className="navbar-nav ml-auto">
 
               <li className="nav-item">
-                <Link className="nav-link active" to="/venta">Ventas</Link>
+                <Link className="nav-link active" to="/ventas">Ventas</Link>
               </li>
 
 
